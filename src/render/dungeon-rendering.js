@@ -2,12 +2,11 @@ import React, { useEffect, useRef, useState } from "react";
 import createOffscreen from "./rendering";
 
 function drawDungeon(dungeon, offscreen, size) {
-  const width = dungeon.getWidth();
-  const height = dungeon.getHeight();
+  const { width, height } = dungeon;
   const car =
     Math.min(Math.trunc(size / width), Math.trunc(size / height)) || 1;
 
-  dungeon.getData().forEach(function (t, i) {
+  dungeon.data.forEach(function (t, i) {
     if (t === 1) {
       const x = i % width;
       const y = Math.trunc(i / width);
