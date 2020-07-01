@@ -12,4 +12,6 @@ function createMaze(width, height) {
   return { data: maze, width, height };
 }
 
+export { default as carveMaze } from "./carve-maze";
+
 export default createMaze;
