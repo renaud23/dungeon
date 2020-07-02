@@ -1,5 +1,5 @@
 import { TILES } from "../common";
-import { randomInt, isTotallyWalled } from "../common";
+import { randomInt, getCoords } from "../common";
 
 const DIRECTIONS = {
   north: 1,
@@ -24,16 +24,16 @@ function joinPos(start, end, data, width) {
   }
 }
 
-// function canGo(pos, data, da, db) {
-//   const n1 = pos + da;
-//   const n2 = pos + da * 2;
-//   const positions = [n1, n2, n1 + db, n1 - db, n2 + db, n2 - db];
-//   const how = positions.reduce(function (a, next) {
-//     return a + data[next];
-//   }, 0);
+function canGo(pos, data, da, db) {
+  const n1 = pos + da;
+  const n2 = pos + da * 2;
+  const positions = [n1, n2, n1 + db, n1 - db, n2 + db, n2 - db];
+  const how = positions.reduce(function (a, next) {
+    return a + data[next];
+  }, 0);
 
-//   return how === 6;
-// }
+  return how === 6;
+}
 
 function getNextPos(neighbors = [], direction) {
   if (neighbors.length) {
@@ -42,28 +42,28 @@ function getNextPos(neighbors = [], direction) {
       return dir === direction;
     });
 
-    return cdt && randomInt(10) > 3
+    return cdt && randomInt(10) > 0
       ? cdt
       : neighbors[randomInt(neighbors.length)];
   }
   return undefined;
 }
 
-function getDirs(pos, data, width, height, how = 2) {
+function getDirs(pos, data, width, height) {
   const dirs = [];
   const x = pos % width;
   const y = Math.trunc(pos / width);
-  if (x < width - (how + 1) && isTotallyWalled(x + how, y, data, width)) {
-    dirs.push([pos + how, DIRECTIONS.east]);
+  if (x < width - 2 && canGo(pos, data, 1, width)) {
+    dirs.push([pos + 1, DIRECTIONS.east]);
   }
-  if (y < height - (how + 1) && isTotallyWalled(x, y + how, data, width)) {
-    dirs.push([pos + how * width, DIRECTIONS.south]);
+  if (y < height - 1 && canGo(pos, data, width, 1)) {
+    dirs.push([pos + width, DIRECTIONS.south]);
   }
-  if (x > how && isTotallyWalled(x - how, y, data, width)) {
-    dirs.push([pos - how, DIRECTIONS.west]);
+  if (x > 1 && canGo(pos, data, -1, width)) {
+    dirs.push([pos - 1, DIRECTIONS.west]);
   }
-  if (y > how && isTotallyWalled(x, y - how, data, width)) {
-    dirs.push([pos - how * width, DIRECTIONS.north]);
+  if (y > 0 && canGo(pos, data, -width, 1)) {
+    dirs.push([pos - width, DIRECTIONS.north]);
   }
 
   return dirs;
@@ -81,7 +81,8 @@ export function carveMaze(pos, origin, width, height) {
     let neighbors = getDirs(currentPos, maze, width, height);
     if (neighbors.length) {
       const [nextPos, nextDir] = getNextPos(neighbors, currentDir);
-      joinPos(currentPos, nextPos, maze, width);
+      // joinPos(currentPos, nextPos, maze, width);
+      maze[nextPos] = TILES.GROUND;
       path.push(currentPos);
       currentDir = nextDir;
       currentPos = nextPos;

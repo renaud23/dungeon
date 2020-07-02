@@ -5,6 +5,6 @@ import DungeonRenderer from "./render/dungeon-rendering";
 import { createDungeon, createMaze } from "./dungeon";
 
 render(
-  <DungeonRenderer dungeon={createDungeon(50, 50)} />,
+  <DungeonRenderer dungeon={createDungeon(30, 30)} />,
   document.getElementById("root")
 );

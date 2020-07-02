@@ -44,6 +44,7 @@ function enlargedIt(positions, data, width, height) {
     const current = positions.pop();
     getPossibles(current, next, width, height).forEach(function (p) {
       next[p] = TILES.GROUND;
+      nextPositions.push(p);
     });
   }
   return [next, nextPositions];

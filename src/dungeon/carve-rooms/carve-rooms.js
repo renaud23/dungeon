@@ -1,43 +1,61 @@
-import computeRects from "./compute-rect";
-import { TILES, getCoords, isInRect, randomInt } from "../common";
+import { TILES, getCoords, randomInt } from "../common";
 
-function isInRoom(i, rooms) {
-  return rooms.reduce(function (a, room) {
-    return a || room.indexOf(i) !== -1;
-  }, false);
+const MIN_SIZE = 5;
+const TRY_LIMITE = 20;
+
+function overlapped(a, b) {
+  const [x1, y1, w1, h1] = a;
+  const [x2, y2, w2, h2] = b;
+  const xx = Math.max(x1 + w1, x2 + w2) - Math.min(x1, x2);
+  const yy = Math.max(y1 + h1, y2 + h2) - Math.min(y1, y2);
+  if (yy - 1 < h1 + h2 && xx - 1 < w1 + w2) {
+    return true;
+  }
+  return false;
 }
 
-export function carveRooms(rooms, data, width) {
-  return data.map(function (a, i) {
-    if (isInRoom(i, rooms)) {
-      return TILES.GROUND;
+function validateRect(rect, rects) {
+  return rects.reduce(function (a, r) {
+    return a && !overlapped(r, rect);
+  }, true);
+}
+
+function generateOneRect(width, height) {
+  const w = MIN_SIZE + randomInt(MIN_SIZE * 2);
+  const h = MIN_SIZE + randomInt(MIN_SIZE * 2);
+  const x = 1 + randomInt(width - w - 2);
+  const y = 1 + randomInt(height - h - 2);
+
+  return [x, y, w, h];
+}
+
+function generateRoom(width, height, rects = [], tryIt = 0) {
+  if (tryIt < TRY_LIMITE) {
+    const rect = generateOneRect(width, height);
+    if (validateRect(rect, rects)) {
+      return generateRoom(width, height, [...rects, rect], tryIt);
     }
-    return a;
-  });
-}
+    return generateRoom(width, height, rects, tryIt + 1);
+  }
 
-function computeRoomPosition(room, width) {
-  const [x, y, w, h] = room;
-  return new Array(w * h).fill(0).map(function (_, i) {
-    const [xi, yi] = getCoords(i, w);
-    return x + xi + (y + yi) * width;
-  });
+  return rects;
 }
 
 function carve(data, width, height) {
-  const rects = computeRects([1, 1, width - 1, height - 1]);
-  const rooms = rects.map(function (rect) {
+  const rooms = generateRoom(width, height).map(function (rect) {
     const [x, y, w, h] = rect;
-    const wi = Math.trunc(w / 2 + randomInt(w / 2));
-    const xi = Math.trunc(x + (w - wi) / 2);
-
-    const hi = Math.trunc(h / 2 + randomInt(h / 2));
-    const yi = Math.trunc(y + (h - hi) / 2);
-
-    return computeRoomPosition([xi, yi, wi, hi], width);
+    return new Array(w * h).fill(0).map(function (_, i) {
+      const [xi, yi] = getCoords(i, w);
+      return x + xi + (y + yi) * width;
+    });
   });
 
-  const next = carveRooms(rooms, data, width);
+  const next = [...data];
+  rooms.forEach(function (room) {
+    room.forEach(function (pos) {
+      next[pos] = TILES.GROUND;
+    });
+  });
 
   return { data: next, rooms };
 }

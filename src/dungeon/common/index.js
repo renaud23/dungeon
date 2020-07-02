@@ -27,4 +27,27 @@ export function isTotallyWalled(x, y, data, width) {
   return count === 9;
 }
 
+export function isInBound(position, width, height, limite = 0) {
+  const [x, y] = getCoords(position, width);
+  if (
+    x > limite &&
+    x < width - 1 - limite &&
+    y > limite &&
+    y < height - 1 - limite
+  ) {
+    return true;
+  }
+  return false;
+}
+
+export function getNeighbors(position, width) {
+  const neighbors = [
+    position + 1,
+    position - 1,
+    position + width,
+    position - width,
+  ];
+  return neighbors;
+}
+
 export { default as TILES } from "./tiles";

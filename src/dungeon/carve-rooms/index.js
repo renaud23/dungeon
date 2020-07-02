@@ -1,1 +1,1 @@
-export { default, carveRooms } from "./carve-rooms";
+export { default } from "./carve-rooms";
