@@ -1,9 +1,4 @@
-import { TILES, randomInt, getNeighbors } from "./common";
-
-function randomPos(rooms) {
-  const room = rooms[randomInt(rooms.length)];
-  return room[randomInt(room.length)];
-}
+import { TILES, getNeighbors, randomRoomPos } from "./common";
 
 function isClosed(pos, data, width) {
   const how = getNeighbors(pos, width).reduce(function (a, p) {
@@ -14,7 +9,7 @@ function isClosed(pos, data, width) {
 }
 
 function refill(rooms, data, width, height) {
-  const start = randomPos(rooms);
+  const start = randomRoomPos(rooms);
   const next = [...data];
   const stack = [start];
 
@@ -38,21 +33,6 @@ function refill(rooms, data, width, height) {
         }
       });
     }
-
-    // if (isClosed(current, next, width)) {
-    //   next[current] = TILES.WALL;
-    //   if (path.length) {
-    //     current = path.pop();
-    //   }
-    // } else {
-    //   path.push(current);
-    //   current = getNeighbors(current, width).find(function (pos) {
-    //     return next[pos] === TILES.GROUND && visited.indexOf(pos) === -1;
-    //   });
-    //   if (!current && path.length) {
-    //     current = path.pop();
-    //   }
-    // }
   }
 
   return { data: next, visited };

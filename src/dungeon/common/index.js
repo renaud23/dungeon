@@ -50,4 +50,15 @@ export function getNeighbors(position, width) {
   return neighbors;
 }
 
+export function randomRoomPos(rooms) {
+  const room = rooms[randomInt(rooms.length)];
+  return room[randomInt(room.length)];
+}
+
+export function arrayToMap(arr) {
+  return arr.reduce(function (a, k) {
+    return { ...a, [k]: k };
+  }, {});
+}
+
 export { default as TILES } from "./tiles";

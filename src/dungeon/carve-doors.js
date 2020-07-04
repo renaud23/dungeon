@@ -54,37 +54,44 @@ function getConnectorsNear(pos, connectors, width) {
   }, []);
 }
 
-function chooseRandomConnectors(room, connectors, width) {
-  const conns = room.reduce(
-    function (a, pos) {
-      return [...a, ...getConnectorsNear(pos, connectors, width)];
-    },
+function openRoom(room, connectors, data, width) {
+  const conns = room.reduce(function (a, pos) {
+    return [...a, ...getConnectorsNear(pos, connectors, width)];
+  }, []);
+  if (conns.length) {
+    const next = [...data];
 
-    []
-  );
+    new Array(1 + randomInt(2)).fill(0).forEach(function (c) {
+      const witch = conns[randomInt(conns.length)];
+      next[witch] = TILES.GROUND;
+    });
 
-  return new Array(1 + randomInt(1)).fill(0).map(function () {
-    return conns[randomInt(conns.length)];
-  });
+    const leftConns = connectors.reduce(function (a, c) {
+      if (conns.indexOf(c) !== -1) {
+        return a;
+      }
+      return [...a, c];
+    }, []);
+    return [next, leftConns];
+  }
+
+  return [data, connectors];
+}
+
+function openDoors(rooms, connectors, data, width, height) {
+  const [room, ...leftRooms] = rooms;
+  const [next, leftConns] = openRoom(room, connectors, data, width);
+  if (!leftRooms.length) {
+    return [next];
+  }
+  return openDoors(leftRooms, leftConns, next, width, height);
 }
 
 function carve(rooms, data, width, height) {
   const filled = filledRooms(rooms, data, width);
   const connectors = findConnectors(filled, width, height);
-
-  const connectorsToOpen = rooms.reduce(function (a, room) {
-    const conns = chooseRandomConnectors(room, connectors, width);
-
-    return [...a, ...conns];
-  }, []);
-  const next = data.map(function (v, i) {
-    if (connectorsToOpen.indexOf(i) !== -1) {
-      return TILES.GROUND;
-    }
-    return v;
-  });
-
-  return { data: next, connectors: connectorsToOpen };
+  const [next] = openDoors(rooms, connectors, data, width, height);
+  return { data: next, doors: [] };
 }
 
 export default carve;

@@ -16,13 +16,13 @@ function drawDungeon(dungeon, offscreen, size) {
     const x = i % width;
     const y = Math.trunc(i / width);
     if (t === 0) {
-      offscreen.fillRect("red", x * car, y * car, car, car);
+      offscreen.fillRect("magenta", x * car, y * car, car, car);
     } else {
-      offscreen.fillRect("blue", x * car + 1, y * car + 1, car - 2, car - 2);
+      offscreen.fillRect("blue", x * car, y * car, car, car);
     }
   });
 
-  dungeon.connectors.forEach(function (pos) {
+  dungeon.doors.forEach(function (pos) {
     const x = pos % width;
     const y = Math.trunc(pos / width);
     offscreen.fillRect("yellow", x * car + 1, y * car + 1, car - 2, car - 2);
@@ -36,11 +36,11 @@ function drawDungeon(dungeon, offscreen, size) {
   //   });
   // });
 
-  dungeon.visited.forEach(function (i) {
-    const x = i % width;
-    const y = Math.trunc(i / width);
-    offscreen.fillRect("orange", x * car + 4, y * car + 4, car - 8, car - 8);
-  });
+  // dungeon.visited.forEach(function (i) {
+  //   const x = i % width;
+  //   const y = Math.trunc(i / width);
+  //   offscreen.fillRect("orange", x * car + 1, y * car + 1, car - 2, car - 2);
+  // });
 }
 
 function DungeonRenderer({ dungeon }) {

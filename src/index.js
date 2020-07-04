@@ -2,9 +2,9 @@ import React from "react";
 import { render } from "react-dom";
 import DungeonRenderer from "./render/dungeon-rendering";
 
-import { createDungeon, createMaze } from "./dungeon";
+import { createDungeon } from "./dungeon";
 
 render(
-  <DungeonRenderer dungeon={createDungeon(30, 30)} />,
+  <DungeonRenderer dungeon={createDungeon(70, 50)} />,
   document.getElementById("root")
 );

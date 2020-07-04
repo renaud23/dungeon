@@ -1,5 +1,4 @@
-import { TILES } from "../common";
-import { randomInt, getCoords } from "../common";
+import { TILES, randomInt } from "./common";
 
 const DIRECTIONS = {
   north: 1,
@@ -7,22 +6,6 @@ const DIRECTIONS = {
   east: 3,
   west: 4,
 };
-
-function joinPos(start, end, data, width) {
-  const ax = start % width;
-  const ay = Math.trunc(start / width);
-  const bx = end % width;
-  const by = Math.trunc(end / width);
-  data[start] = TILES.GROUND;
-  if (start !== end && start && end) {
-    const dx = bx - ax;
-    const dy = by - ay;
-    if (Math.abs(dx) > Math.abs(dy)) {
-      joinPos(start + dx / Math.abs(dx), end, data, width);
-    }
-    joinPos(start + width * (dy / Math.abs(dy)), end, data, width);
-  }
-}
 
 function canGo(pos, data, da, db) {
   const n1 = pos + da;
@@ -37,12 +20,11 @@ function canGo(pos, data, da, db) {
 
 function getNextPos(neighbors = [], direction) {
   if (neighbors.length) {
-    const cdt = neighbors.find(function (n) {
-      const [_, dir] = n;
+    const cdt = neighbors.find(function ([_, dir]) {
       return dir === direction;
     });
 
-    return cdt && randomInt(10) > 0
+    return cdt && randomInt(10) > randomInt(5)
       ? cdt
       : neighbors[randomInt(neighbors.length)];
   }

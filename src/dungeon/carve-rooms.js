@@ -1,4 +1,4 @@
-import { TILES, getCoords, randomInt } from "../common";
+import { TILES, getCoords, randomInt } from "./common";
 
 const MIN_SIZE = 5;
 const TRY_LIMITE = 20;

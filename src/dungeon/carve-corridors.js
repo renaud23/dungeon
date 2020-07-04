@@ -1,5 +1,5 @@
 import { getCoords, randomInt, isTotallyWalled } from "./common";
-import { carveMaze } from "./maze";
+import { carveMaze } from "./carve-maze";
 
 function findDisponibles(data, width, height) {
   return data.reduce(function (a, _, i) {

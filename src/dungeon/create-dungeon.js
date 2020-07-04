@@ -12,26 +12,10 @@ function createDungeon(width, height) {
   );
 
   const { data: withMaze } = carveCorridors(data, width, height);
-  const { data: withDoors, connectors } = carveDoors(
-    rooms,
-    withMaze,
-    width,
-    height
-  );
+  const { data: withDoors, doors } = carveDoors(rooms, withMaze, width, height);
+  const { data: refilled } = refillCorridors(rooms, withDoors, width, height);
 
-  const { data: refilled, visited } = refillCorridors(
-    rooms,
-    withDoors,
-    width,
-    height
-  );
-
-  return { width, height, data: refilled, connectors, rooms, visited };
+  return { width, height, data: refilled, doors, rooms };
 }
 
-export default (...args) => {
-  const start = new Date().getTime();
-  const what = createDungeon(...args);
-  console.log("ending ", new Date().getTime() - start);
-  return what;
-};
+export default createDungeon;
