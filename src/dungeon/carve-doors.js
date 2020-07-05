@@ -60,10 +60,12 @@ function openRoom(room, connectors, data, width) {
   }, []);
   if (conns.length) {
     const next = [...data];
+    const doors = [];
 
     new Array(1 + randomInt(2)).fill(0).forEach(function (c) {
       const witch = conns[randomInt(conns.length)];
       next[witch] = TILES.GROUND;
+      doors.push(witch);
     });
 
     const leftConns = connectors.reduce(function (a, c) {
@@ -72,26 +74,36 @@ function openRoom(room, connectors, data, width) {
       }
       return [...a, c];
     }, []);
-    return [next, leftConns];
+    return [next, leftConns, doors];
   }
 
-  return [data, connectors];
+  return [data, connectors, []];
 }
 
-function openDoors(rooms, connectors, data, width, height) {
+function openDoors(
+  rooms,
+  connectors,
+  data,
+  width,
+  height,
+  precedentDoors = []
+) {
   const [room, ...leftRooms] = rooms;
-  const [next, leftConns] = openRoom(room, connectors, data, width);
+  const [next, leftConns, doors] = openRoom(room, connectors, data, width);
   if (!leftRooms.length) {
-    return [next];
+    return [next, [...precedentDoors, ...doors]];
   }
-  return openDoors(leftRooms, leftConns, next, width, height);
+  return openDoors(leftRooms, leftConns, next, width, height, [
+    ...precedentDoors,
+    ...doors,
+  ]);
 }
 
 function carve(rooms, data, width, height) {
   const filled = filledRooms(rooms, data, width);
   const connectors = findConnectors(filled, width, height);
-  const [next] = openDoors(rooms, connectors, data, width, height);
-  return { data: next, doors: [] };
+  const [next, doors] = openDoors(rooms, connectors, data, width, height);
+  return { data: next, doors };
 }
 
 export default carve;
