@@ -86,24 +86,38 @@ function openDoors(
   data,
   width,
   height,
-  precedentDoors = []
+  precedentDoors = [],
+  roomsWithDoors = []
 ) {
   const [room, ...leftRooms] = rooms;
   const [next, leftConns, doors] = openRoom(room, connectors, data, width);
+  const nextRoom = { positions: room, doors };
   if (!leftRooms.length) {
-    return [next, [...precedentDoors, ...doors]];
+    return [next, [...precedentDoors, ...doors], [...roomsWithDoors, nextRoom]];
   }
-  return openDoors(leftRooms, leftConns, next, width, height, [
-    ...precedentDoors,
-    ...doors,
-  ]);
+
+  return openDoors(
+    leftRooms,
+    leftConns,
+    next,
+    width,
+    height,
+    [...precedentDoors, ...doors],
+    [...roomsWithDoors, nextRoom]
+  );
 }
 
 function carve(rooms, data, width, height) {
   const filled = filledRooms(rooms, data, width);
   const connectors = findConnectors(filled, width, height);
-  const [next, doors] = openDoors(rooms, connectors, data, width, height);
-  return { data: next, doors };
+  const [next, doors, roomsDoors] = openDoors(
+    rooms,
+    connectors,
+    data,
+    width,
+    height
+  );
+  return { data: next, doors, roomsDoors };
 }
 
 export default carve;

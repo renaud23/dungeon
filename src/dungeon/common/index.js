@@ -62,3 +62,5 @@ export function arrayToMap(arr) {
 }
 
 export { default as TILES } from "./tiles";
+
+export { printDungeon } from "./print";

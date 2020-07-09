@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import { getCoords } from "../dungeon/common";
 import createOffscreen from "./rendering";
 
 function drawDungeon(dungeon, offscreen, size) {
@@ -22,11 +23,30 @@ function drawDungeon(dungeon, offscreen, size) {
     }
   });
 
+  // dungeon.special.forEach(function (value, i) {
+  //   const [x, y] = getCoords(i, width);
+
+  //   if (value >= 2) {
+  //     const color = `rgb(100,${50 + (value - 2) * 20},50)`;
+  //     offscreen.fillRect(color, x * car, y * car, car, car);
+  //   }
+  // });
+
   dungeon.doors.forEach(function (pos) {
-    const x = pos % width;
-    const y = Math.trunc(pos / width);
+    const [x, y] = getCoords(pos, width);
     offscreen.fillRect("yellow", x * car + 1, y * car + 1, car - 2, car - 2);
   });
+
+  // const { start, zones } = dungeon.regions;
+  // zones.forEach(function (region, value) {
+  //   const { positions, exits } = region;
+  //   positions.forEach(function (pos) {
+  //     const [x, y] = getCoords(pos, width);
+  //     const val2 = 25 * value;
+  //     const color = `rgb(${val2},${val2},${val2})`;
+  //     offscreen.fillRect(color, x * car, y * car, car, car);
+  //   });
+  // });
 
   // dungeon.rooms.forEach(function (room) {
   //   room.forEach(function (pos) {

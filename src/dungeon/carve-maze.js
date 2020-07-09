@@ -63,7 +63,6 @@ export function carveMaze(pos, origin, width, height) {
     let neighbors = getDirs(currentPos, maze, width, height);
     if (neighbors.length) {
       const [nextPos, nextDir] = getNextPos(neighbors, currentDir);
-      // joinPos(currentPos, nextPos, maze, width);
       maze[nextPos] = TILES.GROUND;
       path.push(currentPos);
       currentDir = nextDir;
