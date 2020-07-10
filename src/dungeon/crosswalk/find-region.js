@@ -100,8 +100,6 @@ function find(dungeon) {
     rooms
   );
 
-  console.log(zones);
-
   return { ...dungeon, regions: { start, zones } };
 }
 
