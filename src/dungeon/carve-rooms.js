@@ -44,15 +44,18 @@ function generateRoom(width, height, rects = [], tryIt = 0) {
 function carve(data, width, height) {
   const rooms = generateRoom(width, height).map(function (rect) {
     const [x, y, w, h] = rect;
-    return new Array(w * h).fill(0).map(function (_, i) {
-      const [xi, yi] = getCoords(i, w);
-      return x + xi + (y + yi) * width;
-    });
+    return {
+      positions: new Array(w * h).fill(0).map(function (_, i) {
+        const [xi, yi] = getCoords(i, w);
+        return x + xi + (y + yi) * width;
+      }),
+    };
   });
 
   const next = [...data];
   rooms.forEach(function (room) {
-    room.forEach(function (pos) {
+    const { positions } = room;
+    positions.forEach(function (pos) {
       next[pos] = TILES.GROUND;
     });
   });

@@ -18,11 +18,11 @@ function findDoors(position, doors, visited, width) {
 }
 
 function findThem(pos, dungeon, doorsLeft, visited = []) {
-  const { data, width } = dungeon;
+  const { width } = dungeon;
   const stack = [pos];
   const positions = [];
   const exits = [];
-  let step = 0;
+
   while (stack.length) {
     const current = stack.pop();
     positions.push(current);
@@ -42,7 +42,11 @@ function findThem(pos, dungeon, doorsLeft, visited = []) {
     }
   }
 
-  const zones = [{ positions, exits }];
+  const zones = [{ positions: positions.slice(1), exits }].filter(function ({
+    positions,
+  }) {
+    return positions.length > 0;
+  });
 
   if (exits.length) {
     const doorsClean = doorsLeft.reduce(function (a, d) {
@@ -63,7 +67,6 @@ function find(dungeon) {
   const { rooms, doors } = dungeon;
   const start = randomRoomPos(rooms);
   const zones = findThem(start, dungeon, doors);
-  //   console.log(zones);
   return { ...dungeon, regions: { start, zones } };
 }
 

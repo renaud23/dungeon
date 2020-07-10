@@ -12,7 +12,6 @@ function refill(rooms, data, width, height) {
   const start = randomRoomPos(rooms);
   const next = [...data];
   const stack = [start];
-
   const path = [];
   const visited = [];
 
