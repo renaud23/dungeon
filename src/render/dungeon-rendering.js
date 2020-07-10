@@ -50,7 +50,7 @@ function drawDungeon(dungeon, offscreen, size) {
   //   offscreen.fillRect("yellow", x * car + 1, y * car + 1, car - 2, car - 2);
   // });
 
-  const { start, zones } = dungeon.regions;
+  const { zones } = dungeon.regions;
 
   zones.forEach(function (region, i) {
     const color = getColor(i);
