@@ -14,6 +14,7 @@ function refill(rooms, data, width, height) {
   const stack = [start];
   const path = [];
   const visited = [];
+  const refilled = [];
 
   while (stack.length) {
     const current = stack.pop();
@@ -21,6 +22,7 @@ function refill(rooms, data, width, height) {
 
     if (isClosed(current, next, width)) {
       next[current] = TILES.WALL;
+      refilled.push(current);
       if (path.length) {
         stack.push(path.pop());
       }
@@ -34,7 +36,7 @@ function refill(rooms, data, width, height) {
     }
   }
 
-  return { data: next, visited };
+  return { data: next, visited, refilled, origin: start };
 }
 
 export default refill;

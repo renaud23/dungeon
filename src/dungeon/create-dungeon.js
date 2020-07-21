@@ -1,6 +1,7 @@
 import carveRooms from "./carve-rooms";
 import carveDoors from "./carve-doors";
 import carveCorridors from "./carve-corridors";
+import refillUnused from "./refill-unused";
 import { TILES } from "./common";
 import refillCorridors from "./refill-corridors";
 
@@ -17,9 +18,23 @@ function createDungeon(width, height) {
     width,
     height
   );
-  const { data: refilled } = refillCorridors(rooms, withDoors, width, height);
-  const dungeon = { width, height, data: refilled, doors, rooms: roomsDoors };
-  return dungeon;
+  const { data: withRefilled, origin } = refillCorridors(
+    rooms,
+    withDoors,
+    width,
+    height
+  );
+  const dungeon = {
+    width,
+    height,
+    data: withRefilled,
+    doors,
+    rooms: roomsDoors,
+    // refilled, // empty zone refilled with wall
+    origin, // start position when refill corridors
+  };
+  console.log(dungeon);
+  return refillUnused(dungeon);
 }
 
 export default createDungeon;

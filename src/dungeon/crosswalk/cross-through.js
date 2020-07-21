@@ -36,7 +36,7 @@ function cross(from, dungeon, todo = defaultTodo) {
   const stack = [from];
   const visited = [];
   const next = [...data];
-  let step = 0;
+
   while (stack.length) {
     const current = stack.pop();
     const disponibles = getVoisinsDisponibles(current, dungeon, visited);
@@ -44,10 +44,9 @@ function cross(from, dungeon, todo = defaultTodo) {
       disponibles.forEach(function (pos) {
         visited.push(pos);
         stack.push(pos);
-        next[pos] = todo(current, pos, dungeon, step);
+        next[pos] = todo(current, pos, dungeon);
       });
     }
-    step += 1;
   }
 
   return { ...dungeon, data: next, start: from };
